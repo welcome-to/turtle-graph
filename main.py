@@ -9,36 +9,32 @@ first_point = None
 first_point_id = None
 second_point = None
 second_point_id = None
-def get_pos(x,y):
-    global mod, T, list_of_pos,first_point,second_point, conects,first_point_id,second_point_id
+def get_pos(x,y,color):
+    global mod, T, list_of_pos,conects,first_point_id,second_point_id
     if mod == 0:
         T.penup()
         T.setposition(x,y)
-        T.dot(30)
+        T.dot(30,color)
         T.penup()
-        list_of_pos.append((x,y))
+        list_of_pos.append((x,y,color))
     else:
-        if first_point == None:
+        if first_point_id == None:
             for i in range(len(list_of_pos)):
                 dist = ((list_of_pos[i][0]-x)**2+(list_of_pos[i][1]-y)**2)**0.5
                 if dist<15:
-                    first_point = list_of_pos[i]
                     first_point_id = i
         else:
             for i in range(len(list_of_pos)):
                 dist = ((list_of_pos[i][0]-x)**2+(list_of_pos[i][1]-y)**2)**0.5
                 if dist<15:
-                    second_point = list_of_pos[i]
                     second_point_id = i
-            if second_point != None:
+            if second_point_id != None:
                 T.penup()
-                T.setposition(first_point[0],first_point[1])
+                T.setposition(*list_of_pos[first_point_id][:2])
                 T.pendown()
-                T.setposition(second_point[0],second_point[1])
+                T.setposition(*list_of_pos[second_point_id][:2])
                 conects.append((first_point_id,second_point_id))
-                first_point = None
                 first_point_id = None
-                second_point = None
                 second_point_id = None
 def open_file():
     file = askopenfile(mode = 'r',filetypes=[('Text Files', '*.txt')])
@@ -61,9 +57,9 @@ def save_as_file():
 def draw_graf(dots,conects):
     try:
         dots = dots[:-1]
-        dots = [list(map(float,i.split(','))) for i in dots.split('|')]
+        dots = [list(map(float,i.split(',')[:2]))+[i.split(',')[-1]] for i in dots.split('|')]
         for i in dots:
-            get_pos(i[0],i[1])
+            get_pos(*i)
         change_mod()
         conects = [list(map(int,i.split(','))) for i in conects[:-1].split('|')]
         for i in conects:
@@ -77,18 +73,18 @@ def draw_graf(dots,conects):
 
 
 def change_mod():
-    global mod, first_point,second_point,first_point_id,second_point_id
+    global mod,first_point_id,second_point_id
     if mod == 0:
         mod = 1
     else:
         mod = 0
-        second_point = None
-        first_point = None
+        second_point_id = None
+        first_point_id = None
 def clear():
-    global mod,first_point,second_point,list_of_pos
+    global mod,list_of_pos,first_point_id,second_point_ids
     mod = 0
-    first_point = None
-    second_point = None
+    first_point_id = None
+    second_point_id = None
     list_of_pos = []
     resetscreen()
 onkey(change_mod,'m')
