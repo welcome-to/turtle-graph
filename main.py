@@ -36,8 +36,11 @@ def get_pos(x,y,color):
                 conects.append((first_point_id,second_point_id))
                 first_point_id = None
                 second_point_id = None
-def open_file():
-    file = askopenfile(mode = 'r',filetypes=[('Text Files', '*.txt')])
+def open_file(filename=None):
+    if filename==None:
+        file = askopenfile(mode = 'r',filetypes=[('Text Files', '*.txt')])
+    else:
+        file = open('r',filename)
     try:
         dots = file.readline()
         conects = file.readline()
