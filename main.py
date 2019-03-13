@@ -1,16 +1,18 @@
 from turtle import *
 from tkinter.filedialog import askopenfile, asksaveasfile
 
-T = Turtle()
-list_of_pos = []
-conects = []
-mod = 0
-first_point = None
-first_point_id = None
-second_point = None
-second_point_id = None
-def get_pos(x,y,color):
-    global mod, T, list_of_pos,conects,first_point_id,second_point_id
+
+__all__ = ['open_file']
+
+
+def get_pos(*args):
+    x,y = args[:2]
+    if len(args)>2:
+        color = args[2]
+    else:
+        color = 'black'
+
+    global mod, list_of_pos,conects,first_point_id,second_point_id,T
     if mod == 0:
         T.penup()
         T.setposition(x,y)
@@ -40,7 +42,9 @@ def open_file(filename=None):
     if filename==None:
         file = askopenfile(mode = 'r',filetypes=[('Text Files', '*.txt')])
     else:
-        file = open('r',filename)
+        file = open(filename,'r')
+        create_turtle()
+
     try:
         dots = file.readline()
         conects = file.readline()
@@ -90,11 +94,22 @@ def clear():
     second_point_id = None
     list_of_pos = []
     resetscreen()
-onkey(change_mod,'m')
-onkey(clear,'c')
-onkey(open_file,'o')
-onkey(save_as_file,'s')
-onscreenclick(get_pos)
-listen()
 
-mainloop()
+def create_turtle():
+    global list_of_pos, conects,mod,first_point_id,second_point_id,T
+    T = Turtle()
+    list_of_pos = []
+    conects = []
+    mod = 0
+    first_point_id = None
+    second_point_id = None
+    onkey(change_mod,'m')
+    onkey(clear,'c')
+    onkey(open_file,'o')
+    onkey(save_as_file,'s')
+    onscreenclick(get_pos)
+    listen()
+    mainloop()
+
+if __name__ == '__main__':
+    create_turtle()
