@@ -1,4 +1,5 @@
-from main import *
+from graph import *
 
-
-open_file(filename='test_graph.txt')
+im = Drawer()
+im.open_file(filename='test_graph.txt')
+im.draw()
